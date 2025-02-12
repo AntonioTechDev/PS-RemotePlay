@@ -88,11 +88,11 @@ Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda 
 ---
 
 ## ✅ **Workflow completo**
-1️⃣ **Registrare l'account PSN** usando `link_account.py`.
-2️⃣ **Collegare l'account alla console** usando `connecting_account_to_console.py`.
-3️⃣ **Avviare la sessione Remote Play** con `session.py`.
-4️⃣ **Interagire con la console** (comandi futuri da implementare).
-5️⃣ **Terminare la sessione** digitando `exit`.
+1. **Registrare l'account PSN** usando `link_account.py`.
+2. **Collegare l'account alla console** usando `connecting_account_to_console.py`.
+3. **Avviare la sessione Remote Play** con `session.py`.
+4. **Interagire con la console** (comandi futuri da implementare).
+5. **Terminare la sessione** digitando `exit`.
 
 
 🚀 Ora sei pronto a usare Remote Play con il tuo account PSN! 🎮🔥
