@@ -1,60 +1,99 @@
-# 📌 Guida all'Utilizzo degli Script
+# 📌 PS Remote Play - Guida Completa
 
-Questo file fornisce le istruzioni per l'uso degli script **`link_account.py`** e **`connecting_account_to_console.py`** per registrare e connettere un account PSN a una console tramite **pyremoteplay**.
+Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per collegare e gestire account PSN con Remote Play utilizzando la libreria `pyremoteplay`.
 
----
-
-## 📌 Requisiti
-
-- **Python 3.8+** installato
-- **Libreria pyremoteplay** (installabile con `pip install pyremoteplay`)
-- **Accesso a un account PSN valido**
-- **Console PlayStation con Remote Play attivato**
+## 📜 **Indice**
+1. [Prerequisiti](#prerequisiti)
+2. [Registrazione di un account PSN](#registrazione-di-un-account-psn)
+3. [Collegamento di un account a una console](#collegamento-di-un-account-a-una-console)
+4. [Avvio e gestione di una sessione Remote Play](#avvio-e-gestione-di-una-sessione-remote-play)
+5. [Risoluzione dei problemi](#risoluzione-dei-problemi)
 
 ---
 
-## 🔗 1. Registrazione di un Account PSN (`link_account.py`)
+## 📌 **Prerequisiti**
+- Installare Python 3.10 o superiore.
+- Installare le dipendenze richieste eseguendo:
+  ```sh
+  pip install -r requirements.txt
+  ```
+- Disporre di un account PSN valido e di una console PlayStation compatibile con Remote Play.
+- Assicurarsi che la console sia accesa e connessa alla stessa rete del PC.
 
-Lo script `link_account.py` permette di registrare un account PSN e salvarlo nel file `.profile.json`.
+---
 
-### **📌 Passaggi per la registrazione**
-1. **Esegui lo script**
+## 🎮 **Registrazione di un account PSN**
+📌 **Script da eseguire:** `link_account.py`
+
+1. Eseguire il comando:
    ```sh
    python link_account.py
    ```
-2. **Apri il link generato** nel tuo browser e fai il login con il tuo account PSN.
-3. Dopo il login, **copia l'URL di redirect** dalla barra degli indirizzi e incollalo nella finestra del terminale.
-4. Lo script registrerà il tuo account e lo salverà in `.profile.json`.
+2. Seguire le istruzioni per accedere con il proprio account PSN.
+3. Copiare l'URL di redirect generato e incollarlo nella console quando richiesto.
+4. Se tutto è corretto, il profilo verrà salvato nel file `.pyremoteplay/.profile.json`.
 
-### **⚠️ Risoluzione Problemi**
-- **Errore 400 durante il login PSN** → Il server potrebbe aver bloccato il MAC Address del PC. Cambia il **MAC Address** della tua scheda di rete con il software **Technitium MAC Address Changer V6** e ricarica la pagina.
-- **Il nuovo account sovrascrive il precedente** → Ora il sistema permette di salvare più account senza perdere i dati.
+### ⚠ **Nota**
+Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda di rete con **Technitium MAC Address Changer V6**, ricaricare la pagina di login e riprovare.
 
 ---
 
-## 🎮 2. Connessione di un Account alla Console (`connecting_account_to_console.py`)
+## 🎮 **Collegamento di un account a una console**
+📌 **Script da eseguire:** `connecting_account_to_console.py`
 
-Lo script `connecting_account_to_console.py` consente di connettere un account PSN registrato a una console PlayStation tramite Remote Play.
-
-### **📌 Passaggi per la connessione**
-1. **Assicurati che la console sia accesa e che l'account PSN sia l'unico attivo sulla console.**
-2. **Esegui lo script**
+1. Eseguire il comando:
    ```sh
    python connecting_account_to_console.py
    ```
-3. **Seleziona l'account da connettere** (tra quelli registrati in `.profile.json`).
-4. **Inserisci l'IP della console** (visibile in Sistema > Informazioni sistema > ip adress).
-5. **Inserisci il PIN della console** (presente in "Impostazioni > Connessione Riproduzione Remota").
-6. La connessione verrà stabilita e l'account sarà collegato alla console.
+2. Selezionare l'account PSN registrato.
+3. Inserire l'indirizzo IP della console (visibile nelle impostazioni di rete della PlayStation).
+4. Inserire il codice PIN mostrato nelle impostazioni di **Riproduzione Remota** della console.
+5. Se tutto è corretto, la console verrà registrata nel file `.pyremoteplay/.profile.json` associata all'account.
 
-### **⚠️ Risoluzione Problemi**
-- **Errore durante la connessione** → Verifica che sulla console sia attivo **solo l'account che vuoi connettere** e che sia **l'account principale**.
-- **IP errato o console non trovata** → Controlla che l'IP inserito sia corretto e che la console sia accesa.
+### ⚠ **Nota**
+- Quando si collega un account alla console, assicurarsi che sia **l'unico account connesso** e che sia **l'account principale** sulla console.
 
 ---
 
-## ✅ Conclusione
-Ora sei pronto a registrare e connettere più account PSN alla tua console senza problemi! Se riscontri ulteriori difficoltà, verifica i passaggi e assicurati che il tuo PC e la tua console siano nella stessa rete. 🎮🔥
+## 🎮 **Avvio e gestione di una sessione Remote Play**
+📌 **Script da eseguire:** `session.py`
 
-🚀 **Buon divertimento con Remote Play!**
+1. Eseguire il comando:
+   ```sh
+   python session.py
+   ```
+2. Selezionare l'account PSN che si desidera utilizzare per la sessione.
+3. Selezionare la console a cui connettersi.
+4. Se richiesto, inserire l'IP della console.
+5. Attendere che la sessione venga avviata correttamente.
+6. Per terminare la sessione, digitare `exit`.
+
+---
+
+## 🛠 **Risoluzione dei problemi**
+
+### 🔹 **Errore di autenticazione PSN (Errore 400 o 403)**
+- Assicurarsi di copiare l'URL di redirect completo.
+- Provare a cambiare l'indirizzo MAC con **Technitium MAC Address Changer V6** e ripetere il login.
+
+### 🔹 **Impossibile connettere l'account alla console**
+- Assicurarsi che la console sia accesa e connessa alla stessa rete.
+- Controllare che l'account selezionato sia **l'unico connesso** sulla console.
+- Verificare l'IP corretto della console nelle impostazioni di rete della PlayStation.
+
+### 🔹 **Errore durante la creazione della sessione Remote Play**
+- Controllare che la console sia accesa e in modalità riposo con **Riproduzione remota abilitata**.
+- Provare a riavviare sia il PC che la console.
+
+---
+
+## ✅ **Workflow completo**
+1️⃣ **Registrare l'account PSN** usando `link_account.py`.
+2️⃣ **Collegare l'account alla console** usando `connecting_account_to_console.py`.
+3️⃣ **Avviare la sessione Remote Play** con `session.py`.
+4️⃣ **Interagire con la console** (comandi futuri da implementare).
+5️⃣ **Terminare la sessione** digitando `exit`.
+
+
+🚀 Ora sei pronto a usare Remote Play con il tuo account PSN! 🎮🔥
 
