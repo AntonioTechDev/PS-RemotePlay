@@ -7,7 +7,8 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 2. [Registrazione di un account PSN](#registrazione-di-un-account-psn)
 3. [Collegamento di un account a una console](#collegamento-di-un-account-a-una-console)
 4. [Avvio e gestione di una sessione Remote Play](#avvio-e-gestione-di-una-sessione-remote-play)
-5. [Risoluzione dei problemi](#risoluzione-dei-problemi)
+5. [Gestione avanzata della sessione](#gestione-avanzata-della-sessione)
+6. [Risoluzione dei problemi](#risoluzione-dei-problemi)
 
 ---
 
@@ -66,7 +67,33 @@ Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda 
 3. Selezionare la console a cui connettersi.
 4. Se richiesto, inserire l'IP della console.
 5. Attendere che la sessione venga avviata correttamente.
-6. Per terminare la sessione, digitare `exit`.
+6. La sessione invierà automaticamente una serie di comandi per testare la connessione.
+7. Per terminare la sessione, digitare `exit` o attendere la chiusura automatica dello script.
+
+---
+
+## 🎮 **Gestione avanzata della sessione**
+📌 **Script coinvolti:** `session.py`, `remote_play_controller.py`
+
+### 📌 **`remote_play_controller.py`**
+Questo file contiene tutte le funzioni dedicate alla gestione della sessione e del controller. Ecco una panoramica delle funzioni principali:
+
+- **`initialize_controller(device)`**: Avvia il controller per la sessione.
+- **`send_test_commands(device)`**: Invia una serie di comandi per verificare il funzionamento dei controlli.
+- **`safe_disconnect(device)`**: Garantisce una disconnessione sicura evitando errori.
+- **`connect_and_run_session(user_profile, selected_mac, ip_address)`**: Avvia la sessione Remote Play per l'account selezionato e la console corrispondente.
+
+### 📌 **`session.py`**
+Questo script permette di avviare una sessione selezionando l'account e la console desiderata. Si basa sulle funzioni definite in `remote_play_controller.py` per gestire la connessione e i comandi del controller.
+
+Eseguendo `session.py`, lo script:
+1. Mostrerà gli account PSN registrati.
+2. Permetterà di selezionare la console associata.
+3. Recupererà automaticamente l'IP della console (o lo chiederà se non è presente).
+4. Avvierà la sessione e il controller.
+5. Eseguirà una serie di comandi per testare la connessione.
+6. Disconnetterà automaticamente la sessione al termine.
+
 
 ---
 
@@ -90,10 +117,8 @@ Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda 
 ## ✅ **Workflow completo**
 1. **Registrare l'account PSN** usando `link_account.py`.
 2. **Collegare l'account alla console** usando `connecting_account_to_console.py`.
-3. **Avviare la sessione Remote Play** con `session.py`.
-4. **Interagire con la console** (comandi futuri da implementare).
-5. **Terminare la sessione** digitando `exit`.
-
+3. **Avviare la sessione Remote Play ed eseguire comandi** con `session.py`.
+4. **Terminare la sessione in sicurezza**.
 
 🚀 Ora sei pronto a usare Remote Play con il tuo account PSN! 🎮🔥
 
