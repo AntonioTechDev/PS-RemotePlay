@@ -1,0 +1,12 @@
+python=3.10.11
+
+
+wheel
+pyps4-2ndscreen==1.2.1
+cryptography==3.4.6
+protobuf==4.21.1
+requests==2.25.1
+pyee==8.1.0
+pyyaml==6.0
+netifaces==0.11.0
+av==9.2.0

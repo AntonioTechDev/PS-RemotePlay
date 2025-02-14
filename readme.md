@@ -1,13 +1,15 @@
-# 📌 PS Remote Play - Guida Completa
+# 🎮 PS Remote Play - Guida Completa
 
 Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per collegare e gestire account PSN con Remote Play utilizzando la libreria `pyremoteplay`.
+
+---
 
 ## 📜 **Indice**
 1. [Prerequisiti](#prerequisiti)
 2. [Registrazione di un account PSN](#registrazione-di-un-account-psn)
 3. [Collegamento di un account a una console](#collegamento-di-un-account-a-una-console)
 4. [Avvio e gestione di una sessione Remote Play](#avvio-e-gestione-di-una-sessione-remote-play)
-5. [Gestione avanzata della sessione](#gestione-avanzata-della-sessione)
+5. [Struttura del codice](#struttura-del-codice)
 6. [Risoluzione dei problemi](#risoluzione-dei-problemi)
 
 ---
@@ -34,9 +36,6 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 3. Copiare l'URL di redirect generato e incollarlo nella console quando richiesto.
 4. Se tutto è corretto, il profilo verrà salvato nel file `.pyremoteplay/.profile.json`.
 
-### ⚠ **Nota**
-Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda di rete con **Technitium MAC Address Changer V6**, ricaricare la pagina di login e riprovare.
-
 ---
 
 ## 🎮 **Collegamento di un account a una console**
@@ -51,9 +50,6 @@ Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda 
 4. Inserire il codice PIN mostrato nelle impostazioni di **Riproduzione Remota** della console.
 5. Se tutto è corretto, la console verrà registrata nel file `.pyremoteplay/.profile.json` associata all'account.
 
-### ⚠ **Nota**
-- Quando si collega un account alla console, assicurarsi che sia **l'unico account connesso** e che sia **l'account principale** sulla console.
-
 ---
 
 ## 🎮 **Avvio e gestione di una sessione Remote Play**
@@ -67,58 +63,83 @@ Se si verificano errori durante il login, cambiare l'indirizzo MAC della scheda 
 3. Selezionare la console a cui connettersi.
 4. Se richiesto, inserire l'IP della console.
 5. Attendere che la sessione venga avviata correttamente.
-6. La sessione invierà automaticamente una serie di comandi per testare la connessione.
-7. Per terminare la sessione, digitare `exit` o attendere la chiusura automatica dello script.
+6. La sessione catturerà i frame video e li salverà automaticamente.
+7. Per terminare la sessione, premere **CTRL+C** o chiudere la finestra del terminale.
 
 ---
 
-## 🎮 **Gestione avanzata della sessione**
-📌 **Script coinvolti:** `session.py`, `remote_play_controller.py`
+## 📂 **Struttura del Codice**
+Il progetto è ora suddiviso in più moduli per migliorare la manutenibilità.
 
-### 📌 **`remote_play_controller.py`**
-Questo file contiene tutte le funzioni dedicate alla gestione della sessione e del controller. Ecco una panoramica delle funzioni principali:
-
-- **`initialize_controller(device)`**: Avvia il controller per la sessione.
-- **`send_test_commands(device)`**: Invia una serie di comandi per verificare il funzionamento dei controlli.
-- **`safe_disconnect(device)`**: Garantisce una disconnessione sicura evitando errori.
-- **`connect_and_run_session(user_profile, selected_mac, ip_address)`**: Avvia la sessione Remote Play per l'account selezionato e la console corrispondente.
-
-### 📌 **`session.py`**
-Questo script permette di avviare una sessione selezionando l'account e la console desiderata. Si basa sulle funzioni definite in `remote_play_controller.py` per gestire la connessione e i comandi del controller.
-
-Eseguendo `session.py`, lo script:
-1. Mostrerà gli account PSN registrati.
-2. Permetterà di selezionare la console associata.
-3. Recupererà automaticamente l'IP della console (o lo chiederà se non è presente).
-4. Avvierà la sessione e il controller.
-5. Eseguirà una serie di comandi per testare la connessione.
-6. Disconnetterà automaticamente la sessione al termine.
-
+```
+/session
+│── session.py             # Avvio della sessione e selezione di account e console
+│── requirements.txt       # Dipendenze richieste
+│── readme.md              # Documentazione del progetto
+│── /remote_play           # Moduli organizzati per funzionalità
+│   │── __init__.py        # Inizializza il modulo
+│   │── controller.py       # Funzioni per il controller PS
+│   │── session_manager.py  # Connessione e gestione della sessione Remote Play
+│   │── frame_handler.py    # Cattura e salvataggio dei frame
+│   │── utils.py            # Funzioni di utilità (es. pulizia cartelle)
+```
 
 ---
 
-## 🛠 **Risoluzione dei problemi**
+## 📌 **Moduli del Progetto**
+### 🔹 `session.py`
+- **Descrizione:** Script principale per avviare la sessione Remote Play.
+- **Cosa fa:**  
+  1. Mostra gli account registrati.  
+  2. Permette di selezionare la console.  
+  3. Avvia la sessione e inizia la cattura dei frame.  
+  4. Gestisce la chiusura della sessione.  
 
-### 🔹 **Errore di autenticazione PSN (Errore 400 o 403)**
-- Assicurarsi di copiare l'URL di redirect completo.
-- Provare a cambiare l'indirizzo MAC con **Technitium MAC Address Changer V6** e ripetere il login.
+### 🔹 `remote_play/session_manager.py`
+- **Descrizione:** Gestisce la connessione alla sessione Remote Play.
+- **Cosa fa:**  
+  - Crea una connessione con la console.  
+  - Configura il ricevitore video.  
+  - Gestisce la chiusura sicura della sessione.  
 
-### 🔹 **Impossibile connettere l'account alla console**
-- Assicurarsi che la console sia accesa e connessa alla stessa rete.
-- Controllare che l'account selezionato sia **l'unico connesso** sulla console.
-- Verificare l'IP corretto della console nelle impostazioni di rete della PlayStation.
+### 🔹 `remote_play/controller.py`
+- **Descrizione:** Controlla il gamepad della sessione.
+- **Cosa fa:**  
+  - Inizializza il controller.  
+  - Invia comandi test alla console.  
 
-### 🔹 **Errore durante la creazione della sessione Remote Play**
-- Controllare che la console sia accesa e in modalità riposo con **Riproduzione remota abilitata**.
-- Provare a riavviare sia il PC che la console.
+### 🔹 `remote_play/frame_handler.py`
+- **Descrizione:** Gestisce la cattura e il salvataggio dei frame.
+- **Cosa fa:**  
+  - Riceve i frame video.  
+  - Li converte in immagini.  
+  - Li salva nella cartella `frames/{user_name}`.  
+
+### 🔹 `remote_play/utils.py`
+- **Descrizione:** Funzioni di utilità.
+- **Cosa fa:**  
+  - Cancella i frame vecchi prima di una nuova sessione.  
+  - Gestisce la pulizia delle cartelle.  
 
 ---
 
-## ✅ **Workflow completo**
-1. **Registrare l'account PSN** usando `link_account.py`.
-2. **Collegare l'account alla console** usando `connecting_account_to_console.py`.
-3. **Avviare la sessione Remote Play ed eseguire comandi** con `session.py`.
-4. **Terminare la sessione in sicurezza**.
+## 🛠 **Risoluzione dei Problemi**
+### 🔹 **Errore: Nessun frame video ricevuto**
+- **Soluzione:** Assicurarsi che il codec `h264` sia supportato. Se non lo è, il sistema proverà a usare `HEVC`.
 
-🚀 Ora sei pronto a usare Remote Play con il tuo account PSN! 🎮🔥
+### 🔹 **Errore di autenticazione PSN**
+- **Soluzione:** Cambiare l'indirizzo MAC della scheda di rete e riprovare.
 
+### 🔹 **Errore: "Sessione non attiva"**
+- **Soluzione:** Controllare che la console sia accesa e connessa alla stessa rete.
+
+---
+
+## ✅ **Workflow Completo**
+1. **Registrare l'account PSN** con `link_account.py`.
+2. **Collegare l'account alla console** con `connecting_account_to_console.py`.
+3. **Avviare la sessione Remote Play** con `session.py`.
+4. **Il sistema catturerà automaticamente i frame**.
+5. **Terminare la sessione in sicurezza**.
+
+🚀 **Ora il codice è ben strutturato, documentato e pronto all'uso!** 🎮🔥
