@@ -30,7 +30,7 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 1. Eseguire il comando:
    ```sh
-   python link_account.py
+   python -m account_management.link_account
    ```
 2. Seguire le istruzioni per accedere con il proprio account PSN.
 3. Copiare l'URL di redirect generato e incollarlo nella console quando richiesto.
@@ -43,7 +43,7 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 1. Eseguire il comando:
    ```sh
-   python connecting_account_to_console.py
+   python -m account_management.connecting_account_to_console
    ```
 2. Selezionare l'account PSN registrato.
 3. Inserire l'indirizzo IP della console (visibile nelle impostazioni di rete della PlayStation).
@@ -57,7 +57,7 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 1. Eseguire il comando:
    ```sh
-   python session.py
+   python -m session.session
    ```
 2. Selezionare l'account PSN che si desidera utilizzare per la sessione.
 3. Selezionare la console a cui connettersi.
@@ -72,16 +72,24 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 Il progetto è ora suddiviso in più moduli per migliorare la manutenibilità.
 
 ```
-/session
-│── session.py             # Avvio della sessione e selezione di account e console
+📂 PS-SOFTWARE/script-TESTED
 │── requirements.txt       # Dipendenze richieste
 │── readme.md              # Documentazione del progetto
-│── /remote_play           # Moduli organizzati per funzionalità
+│── 📂 account_management   # Gestione degli account PSN
 │   │── __init__.py        # Inizializza il modulo
-│   │── controller.py       # Funzioni per il controller PS
-│   │── session_manager.py  # Connessione e gestione della sessione Remote Play
-│   │── frame_handler.py    # Cattura e salvataggio dei frame
-│   │── utils.py            # Funzioni di utilità (es. pulizia cartelle)
+│   │── connecting_account_to_console.py  # Collega un account PSN a una console
+│   │── link_account.py     # Registra un account PSN nel sistema
+│   │── utils.py            # Funzioni di utilità per la gestione degli account
+│
+│── 📂 session              # Gestione delle sessioni di gioco
+│   │── session.py          # Avvio della sessione e selezione di account e console
+│   │── 📂 Frames           # Contiene i frame acquisiti dalle sessioni
+│   │── 📂 remote_play      # Moduli per la gestione delle sessioni Remote Play
+│       │── __init__.py      # Inizializza il modulo
+│       │── controller.py    # Controlla il gamepad della sessione
+│       │── session_manager.py  # Connessione e gestione della sessione Remote Play
+│       │── frame_handler.py  # Cattura e salvataggio dei frame
+│       │── utils.py         # Funzioni di utilità (es. pulizia cartelle)
 ```
 
 ---
@@ -113,7 +121,7 @@ Il progetto è ora suddiviso in più moduli per migliorare la manutenibilità.
 - **Cosa fa:**  
   - Riceve i frame video.  
   - Li converte in immagini.  
-  - Li salva nella cartella `frames/{user_name}`.  
+  - Li salva nella cartella `Frames/{user_name}`.  
 
 ### 🔹 `remote_play/utils.py`
 - **Descrizione:** Funzioni di utilità.
@@ -134,12 +142,5 @@ Il progetto è ora suddiviso in più moduli per migliorare la manutenibilità.
 - **Soluzione:** Controllare che la console sia accesa e connessa alla stessa rete.
 
 ---
-
-## ✅ **Workflow Completo**
-1. **Registrare l'account PSN** con `link_account.py`.
-2. **Collegare l'account alla console** con `connecting_account_to_console.py`.
-3. **Avviare la sessione Remote Play** con `session.py`.
-4. **Il sistema catturerà automaticamente i frame**.
-5. **Terminare la sessione in sicurezza**.
 
 🚀 **Ora il codice è ben strutturato, documentato e pronto all'uso!** 🎮🔥
