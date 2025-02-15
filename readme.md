@@ -15,7 +15,7 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 ---
 
 ## 📌 **Prerequisiti**
-- Installare Python 3.10 o superiore.
+- Installare Python 3.10.11.
 - Installare le dipendenze richieste eseguendo:
   ```sh
   pip install -r requirements.txt
