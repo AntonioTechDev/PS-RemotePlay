@@ -5,9 +5,12 @@ from pyremoteplay.receiver import QueueReceiver
 from remote_play.utils import clean_frame_directory
 from remote_play.controller import initialize_controller, send_test_commands
 from remote_play.frame_handler import save_video_frames
+import sys
 
 Profiles.set_default_path(r"C:\Users\ADB\.pyremoteplay\.profile.json")
 profiles = Profiles.load()
+
+import asyncio
 
 async def safe_disconnect(device):
     """Gestisce la disconnessione sicura della sessione Remote Play."""
@@ -16,13 +19,25 @@ async def safe_disconnect(device):
 
         if device.connected:
             print("⏳ Arresto della sessione in corso...")
-            device.disconnect() 
-            await asyncio.sleep(2)
+            try:
+                device.disconnect()
+                await asyncio.sleep(2)  # Attendi la chiusura corretta del trasporto
+            except Exception as e:
+                print(f"⚠️ Errore durante la disconnessione: {e}")
+
+        # Chiusura del trasporto UDP per evitare errori "Fatal write error on datagram transport"
+        if hasattr(device, "transport") and device.transport:
+            try:
+                print("🔌 Chiusura forzata del trasporto...")
+                device.transport.close()
+            except Exception as e:
+                print(f"⚠️ Errore durante la chiusura del trasporto: {e}")
 
         device._session = None
         print("✅ Sessione disconnessa correttamente!")
     else:
         print("⚠️ Nessuna sessione attiva da disconnettere.")
+
 
 async def connect_and_run_session(user_profile, selected_mac, ip_address):
     """ Connette l'utente alla sessione Remote Play e avvia la cattura dei frame. """
