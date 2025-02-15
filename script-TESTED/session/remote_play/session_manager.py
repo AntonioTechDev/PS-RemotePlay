@@ -16,7 +16,7 @@ async def safe_disconnect(device):
 
         if device.connected:
             print("⏳ Arresto della sessione in corso...")
-            device.session.stop()
+            device.disconnect() 
             await asyncio.sleep(2)
 
         device._session = None
