@@ -28,27 +28,56 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 ## 🎮 **Registrazione di un account PSN**
 📌 **Script da eseguire:** `link_account.py`
 
+> **Nota Importante**: Questo script inizializza solamente l'account nel file `.pyremoteplay/.profile.json` creando una struttura base. Il collegamento alla console avverrà tramite lo script successivo.
+
 1. Eseguire il comando:
    ```sh
    python -m account_management.link_account
    ```
 2. Seguire le istruzioni per accedere con il proprio account PSN.
 3. Copiare l'URL di redirect generato e incollarlo nella console quando richiesto.
-4. Se tutto è corretto, il profilo verrà salvato nel file `.pyremoteplay/.profile.json`.
+4. Se tutto è corretto, il profilo verrà inizializzato nel file `.pyremoteplay/.profile.json` con una struttura simile a:
+   ```json
+   "nome_utente": {
+       "id": "base64_encoded_id",
+       "hosts": {}
+   }
+   ```
 
 ---
 
 ## 🎮 **Collegamento di un account a una console**
 📌 **Script da eseguire:** `connecting_account_to_console.py`
 
-1. Eseguire il comando:
+> **Nota Importante**: Questo script completa il processo di registrazione collegando effettivamente l'account PSN alla console e popolando i dati nella sezione "hosts" del file `.profile.json`.
+
+1. Assicurarsi che la console sia accesa e che il Remote Play sia abilitato nelle impostazioni.
+2. Eseguire il comando:
    ```sh
    python -m account_management.connecting_account_to_console
    ```
-2. Selezionare l'account PSN registrato.
-3. Inserire l'indirizzo IP della console (visibile nelle impostazioni di rete della PlayStation).
-4. Inserire il codice PIN mostrato nelle impostazioni di **Riproduzione Remota** della console.
-5. Se tutto è corretto, la console verrà registrata nel file `.pyremoteplay/.profile.json` associata all'account.
+3. Selezionare l'account PSN registrato nel passaggio precedente.
+4. Inserire l'indirizzo IP della console (visibile nelle impostazioni di rete della PlayStation).
+5. Inserire il codice PIN mostrato nelle impostazioni di **Riproduzione Remota** della console.
+6. Se tutto è corretto, la console verrà registrata nel file `.pyremoteplay/.profile.json` associata all'account, e la sezione "hosts" verrà popolata con tutti i dati necessari:
+   ```json
+   "nome_utente": {
+       "id": "base64_encoded_id",
+       "hosts": {
+           "MAC_ADDRESS": {
+               "data": {
+                   "AP-Ssid": "...",
+                   "RP-Key": "...",
+                   "Mac": "...",
+                   "RegistKey": "...",
+                   "Nickname": "...",
+                   "IP": "..."
+               },
+               "type": "PS4"
+           }
+       }
+   }
+   ```
 
 ---
 
@@ -69,7 +98,7 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 ---
 
 ## 📂 **Struttura del Codice**
-Il progetto è ora suddiviso in più moduli per migliorare la manutenibilità.
+Il progetto è suddiviso in più moduli per migliorare la manutenibilità.
 
 ```
 📂 PS-SOFTWARE/script-TESTED
@@ -140,6 +169,13 @@ Il progetto è ora suddiviso in più moduli per migliorare la manutenibilità.
 
 ### 🔹 **Errore: "Sessione non attiva"**
 - **Soluzione:** Controllare che la console sia accesa e connessa alla stessa rete.
+
+### 🔹 **Errore: "No Status" durante il collegamento della console**
+- **Soluzione:** Verificare che:
+  - La console sia accesa e non in modalità standby
+  - L'IP inserito sia corretto e raggiungibile (provare a fare un ping)
+  - Il Remote Play sia abilitato nelle impostazioni della console
+  - Non ci siano firewall che bloccano la comunicazione
 
 ---
 
