@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from account_management.utils import get_user_profile,  get_registered_consoles
 
 async def main():
-    """ Selezione dell'account e avvio della sessione Remote Play. """
+    """ Selezione dell'account e avvio della sessione Remote Play con la nuova implementazione ottimizzata. """
     try:
         print("🔍 [DEBUG] Avvio del processo di selezione account e console...")
         user_profile = get_user_profile()
@@ -36,8 +36,12 @@ async def main():
 
         print(f"\n📡 IP della console selezionato: {ip_address}")
 
-        # Avvio della sessione Remote Play
-        print("🚀 [DEBUG] Avvio della sessione Remote Play...")
+        # Avvio della sessione Remote Play con il nuovo gestore ottimizzato
+        print("🚀 [DEBUG] Avvio della sessione Remote Play ottimizzata...")
+        
+        # Importa il nuovo gestore di sessione
+        from remote_play.session_manager import connect_and_run_session
+        
         await connect_and_run_session(user_profile, selected_mac, ip_address)
         print("✅ [DEBUG] Sessione Remote Play terminata correttamente.")
 
