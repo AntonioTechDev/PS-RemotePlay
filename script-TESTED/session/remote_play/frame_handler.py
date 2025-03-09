@@ -9,6 +9,8 @@ import threading
 import platform
 from collections import deque
 import time
+from ai_model.fifa.game_state import FIFAStateDetector
+from ai_model.fifa.data_collector import FIFADataCollector
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO, 
@@ -26,7 +28,7 @@ MAX_PROCESSING_TASKS = 4  # Limita il numero di task di elaborazione paralleli
 class EnhancedFrameHandler:
     """Gestore avanzato per la cattura e il salvataggio dei frame video."""
     
-    def __init__(self, max_buffer_size=MAX_BUFFER_SIZE):
+    def __init__(self, max_buffer_size=MAX_BUFFER_SIZE, collect_training=False):
         """Inizializza il gestore dei frame con un buffer ottimizzato."""
         self.frame_buffer = deque(maxlen=max_buffer_size)
         self.is_running = False
@@ -46,6 +48,12 @@ class EnhancedFrameHandler:
         
         # Nuova strategia di buffer adattiva
         self.buffer_strategy = "normal"  # può essere "normal", "aggressive", "conservative"
+        
+        # Add FIFA-specific components for training
+        self.collect_training = collect_training
+        if collect_training:
+            self.state_detector = FIFAStateDetector()
+            self.data_collector = FIFADataCollector()
     
     def _enhanced_socket_optimization(self, sock):
         """Applica ottimizzazioni avanzate al socket per massimizzare la stabilità."""
@@ -163,7 +171,7 @@ class EnhancedFrameHandler:
         except (ImportError, AttributeError) as e:
             logger.warning(f"⚠️ Impossibile applicare patch datagram: {e}")
     
-    async def process_frame(self, frame, frame_path):
+    async def process_frame(self, frame, frame_path, device=None):
         """Elabora e salva un singolo frame con controllo delle risorse."""
         async with self.processing_semaphore:  # Limita il numero di task di elaborazione paralleli
             try:
@@ -188,6 +196,20 @@ class EnhancedFrameHandler:
                     self.stats["frames_saved"] += 1
                     
                 logger.debug(f"📸 Frame salvato: {filename}")
+                
+                if self.collect_training and device and device.controller:
+                    # Previously: record gameplay as (game_state, human_action)
+                    # New: compute reward from game_state and sample next state,
+                    # then store the transition for RL training
+                    game_state = self.state_detector.detect_state(img)
+                    human_action = {
+                        "buttons": device.controller.last_button_state,
+                        "sticks": device.controller.stick_state
+                    }
+                    reward = compute_reward(game_state)  # Define your reward function elsewhere
+                    next_state = game_state  # (or the updated state from subsequent frame)
+                    self.data_collector.record_rl_transition(game_state, human_action, reward, next_state)
+                    
                 return True
             except Exception as e:
                 with self.lock:
@@ -295,7 +317,7 @@ class EnhancedFrameHandler:
                     continue
                 
                 # Processa il frame in modo asincrono
-                task = asyncio.create_task(self.process_frame(frame, frame_path))
+                task = asyncio.create_task(self.process_frame(frame, frame_path, device))
                 processing_tasks.add(task)
                 task.add_done_callback(processing_tasks.discard)
                 
@@ -328,6 +350,8 @@ class EnhancedFrameHandler:
         """Ferma in modo sicuro la cattura dei frame."""
         logger.info("🛑 Arresto del gestore dei frame...")
         self.is_running = False
+        if self.collect_training:
+            self.data_collector.save_session()
 
 # Per mantenere la compatibilità con il codice esistente, aggiungiamo la funzione originale
 # che ora utilizza internamente l'EnhancedFrameHandler

@@ -1,45 +1,45 @@
-# 🎮 PS Remote Play - Guida Completa
+# 🎮 PS Remote Play - Complete Guide
 
-Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per collegare e gestire account PSN con Remote Play utilizzando la libreria `pyremoteplay`.
-
----
-
-## 📜 **Indice**
-1. [Prerequisiti](#prerequisiti)
-2. [Registrazione di un account PSN](#registrazione-di-un-account-psn)
-3. [Collegamento di un account a una console](#collegamento-di-un-account-a-una-console)
-4. [Avvio e gestione di una sessione Remote Play](#avvio-e-gestione-di-una-sessione-remote-play)
-5. [Funzionalità avanzate](#funzionalità-avanzate)
-6. [Struttura del codice](#struttura-del-codice)
-7. [Risoluzione dei problemi](#risoluzione-dei-problemi)
+This guide provides detailed instructions for using scripts to connect and manage PSN accounts with Remote Play using the `pyremoteplay` library.
 
 ---
 
-## 📌 **Prerequisiti**
-- Installare Python 3.10.11.
-- Installare le dipendenze richieste eseguendo:
+## 📜 **Table of Contents**
+1. [Prerequisites](#prerequisites)
+2. [PSN Account Registration](#psn-account-registration)
+3. [Linking an Account to a Console](#linking-an-account-to-a-console)
+4. [Starting and Managing a Remote Play Session](#starting-and-managing-a-remote-play-session)
+5. [Advanced Features](#advanced-features)
+6. [Code Structure](#code-structure)
+7. [Troubleshooting](#troubleshooting)
+
+---
+
+## 📌 **Prerequisites**
+- Install Python 3.10.11.
+- Install the required dependencies by running:
   ```sh
   pip install -r requirements.txt
   ```
-- Disporre di un account PSN valido e di una console PlayStation compatibile con Remote Play.
-- Assicurarsi che la console sia accesa e connessa alla stessa rete del PC.
+- Have a valid PSN account and a PlayStation console compatible with Remote Play.
+- Ensure the console is turned on and connected to the same network as the PC.
 
 ---
 
-## 🎮 **Registrazione di un account PSN**
-📌 **Script da eseguire:** `link_account.py`
+## 🎮 **PSN Account Registration**
+📌 **Script to run:** `link_account.py`
 
-> **Nota Importante**: Questo script inizializza solamente l'account nel file `.pyremoteplay/.profile.json` creando una struttura base. Il collegamento alla console avverrà tramite lo script successivo.
+> **Important Note**: This script only initializes the account in the `.pyremoteplay/.profile.json` file by creating a basic structure. The console linking will be done through the next script.
 
-1. Eseguire il comando:
+1. Run the command:
    ```sh
    python -m account_management.link_account
    ```
-2. Seguire le istruzioni per accedere con il proprio account PSN.
-3. Copiare l'URL di redirect generato e incollarlo nella console quando richiesto.
-4. Se tutto è corretto, il profilo verrà inizializzato nel file `.pyremoteplay/.profile.json` con una struttura simile a:
+2. Follow the instructions to log in with your PSN account.
+3. Copy the generated redirect URL and paste it into the console when prompted.
+4. If everything is correct, the profile will be initialized in the `.pyremoteplay/.profile.json` file with a structure similar to:
    ```json
-   "nome_utente": {
+   "username": {
        "id": "base64_encoded_id",
        "hosts": {}
    }
@@ -47,22 +47,22 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 ---
 
-## 🎮 **Collegamento di un account a una console**## 🎮 **Collegamento di un account a una console**
-📌 **Script da eseguire:** `connecting_account_to_console.py`
+## 🎮 **Linking an Account to a Console**
+📌 **Script to run:** `connecting_account_to_console.py`
 
-> **Nota Importante**: Questo script completa il processo di registrazione collegando effettivamente l'account PSN alla console e popolando i dati nella sezione "hosts" del file `.profile.json`.
+> **Important Note**: This script completes the registration process by actually linking the PSN account to the console and populating the data in the "hosts" section of the `.profile.json` file.
 
-1. Assicurarsi che la console sia accesa e che il Remote Play sia abilitato nelle impostazioni.
-2. Eseguire il comando:
+1. Ensure the console is turned on and Remote Play is enabled in the settings.
+2. Run the command:
    ```sh
    python -m account_management.connecting_account_to_console
    ```
-3. Selezionare l'account PSN registrato nel passaggio precedente.
-4. Inserire l'indirizzo IP della console (visibile nelle impostazioni di rete della PlayStation).
-5. Inserire il codice PIN mostrato nelle impostazioni di **Riproduzione Remota** della console.
-6. Se tutto è corretto, la console verrà registrata nel file `.pyremoteplay/.profile.json` associata all'account, e la sezione "hosts" verrà popolata con tutti i dati necessari:
+3. Select the PSN account registered in the previous step.
+4. Enter the console's IP address (visible in the PlayStation's network settings).
+5. Enter the PIN code shown in the console's **Remote Play** settings.
+6. If everything is correct, the console will be registered in the `.pyremoteplay/.profile.json` file associated with the account, and the "hosts" section will be populated with all the necessary data:
    ```json
-   "nome_utente": {
+   "username": {
        "id": "base64_encoded_id",
        "hosts": {
            "MAC_ADDRESS": {
@@ -82,175 +82,175 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 ---
 
-## 🎮 **Avvio e gestione di una sessione Remote Play**
-📌 **Script da eseguire:** `session.py`
+## 🎮 **Starting and Managing a Remote Play Session**
+📌 **Script to run:** `session.py`
 
-1. Eseguire il comando:
+1. Run the command:
    ```sh
    python -m session.session
    ```
-2. Selezionare l'account PSN che si desidera utilizzare per la sessione.
-3. Selezionare la console a cui connettersi.
-4. Il sistema eseguirà una verifica preliminare della connessione e avviserà in caso di problemi.
-5. Attendere che la sessione venga avviata correttamente.
-6. La sessione catturerà i frame video e li salverà automaticamente nella cartella `frames/{user_name}`.
-7. Per terminare la sessione, premere **CTRL+C** o chiudere la finestra del terminale.
+2. Select the PSN account you want to use for the session.
+3. Select the console to connect to.
+4. The system will perform a preliminary connection check and notify you of any issues.
+5. Wait for the session to start correctly.
+6. The session will capture video frames and automatically save them in the `frames/{user_name}` folder.
+7. To end the session, press **CTRL+C** or close the terminal window.
 
 ---
 
-## 🚀 **Funzionalità avanzate**
+## 🚀 **Advanced Features**
 
-### 🔄 **Riconnessione automatica**
-Il sistema è ora in grado di rilevare quando la connessione cade e tentare automaticamente di riconnettersi. Questo aumenta significativamente la stabilità delle sessioni Remote Play, specialmente in caso di connessioni di rete instabili.
+### 🔄 **Automatic Reconnection**
+The system can now detect when the connection drops and automatically attempt to reconnect. This significantly increases Remote Play session stability, especially with unstable network connections.
 
-### 📊 **Monitoraggio della connessione**
-Un nuovo modulo di monitoraggio verifica costantemente:
-- La raggiungibilità della console (ping)
-- La disponibilità dei servizi Remote Play
-- La qualità della connessione
+### 📊 **Connection Monitoring**
+A new monitoring module constantly checks:
+- Console reachability (ping)
+- Remote Play services availability
+- Connection quality
 
-In caso di problemi, il sistema visualizza avvisi e intraprende azioni correttive.
+In case of problems, the system displays warnings and takes corrective actions.
 
-### 🎛️ **Adattamento dinamico della qualità**
-Il sistema monitora le prestazioni e la stabilità della connessione, adattando automaticamente:
-- La risoluzione del video
-- La frequenza dei fotogrammi (fps)
-- La qualità dello stream
+### 🎛️ **Dynamic Quality Adaptation**
+The system monitors connection performance and stability, automatically adjusting:
+- Video resolution
+- Frame rate (fps)
+- Stream quality
 
-Questo garantisce la migliore esperienza possibile anche in condizioni di rete non ottimali.
+This ensures the best possible experience even under non-optimal network conditions.
 
-### 📈 **Ottimizzazioni socket**
-Sono state implementate avanzate ottimizzazioni dei socket di rete che migliorano la stabilità della connessione:
-- Buffer di ricezione/invio ampliati
-- Disattivazione dell'algoritmo Nagle per ridurre la latenza
-- Configurazioni keepalive aggressive per mantenere attiva la connessione
-- Gestione ottimizzata dei timeout
+### 📈 **Socket Optimizations**
+Advanced network socket optimizations have been implemented to improve connection stability:
+- Enlarged receive/send buffers
+- Nagle algorithm disabled to reduce latency
+- Aggressive keepalive configurations
+- Optimized timeout handling
 
-### 📁 **Gestione migliorata dei frame**
-L'acquisizione e il salvataggio dei frame è stata completamente rivista:
-- Elaborazione asincrona dei frame per evitare blocchi
-- Controllo adattivo della velocità di acquisizione
-- Migliore gestione delle risorse di sistema
-- Statistiche dettagliate di acquisizione
+### 📁 **Improved Frame Management**
+Frame capture and saving has been completely revamped:
+- Asynchronous frame processing to avoid blocking
+- Adaptive capture speed control
+- Better system resource management
+- Detailed capture statistics
 
-### 📝 **Logging avanzato**
-È stato implementato un sistema di logging completo che registra:
-- Stato della connessione
-- Prestazioni di acquisizione frame
-- Errori e problemi rilevati
-- Tentativi di riconnessione
+### 📝 **Advanced Logging**
+A comprehensive logging system has been implemented that records:
+- Connection status
+- Frame capture performance
+- Detected errors and issues
+- Reconnection attempts
 
-I log vengono salvati nel file `remote_play_session.log` per facilitare il debug.
+Logs are saved in the `remote_play_session.log` file for easier debugging.
 
 ---
 
-## 📂 **Struttura del Codice**
-Il progetto è suddiviso in più moduli per migliorare la manutenibilità.
+## 📂 **Code Structure**
+The project is divided into multiple modules to improve maintainability.
 
 ```
 📂 PS-SOFTWARE/script-TESTED
-│── requirements.txt       # Dipendenze richieste
-│── readme.md              # Documentazione del progetto
-│── remote_play_session.log # Log delle sessioni Remote Play
-│── 📂 account_management   # Gestione degli account PSN
-│   │── __init__.py        # Inizializza il modulo
-│   │── connecting_account_to_console.py  # Collega un account PSN a una console
-│   │── link_account.py     # Registra un account PSN nel sistema
-│   │── utils.py            # Funzioni di utilità per la gestione degli account
+├── requirements.txt       # Required dependencies
+├── readme.md            # Project documentation
+├── remote_play_session.log # Remote Play session logs
+├── 📂 account_management  # PSN account management
+│   ├── __init__.py      # Initializes the module
+│   ├── connecting_account_to_console.py  # Links PSN account to console
+│   ├── link_account.py   # Registers PSN account in system
+│   └── utils.py         # Account management utility functions
 │
-│── 📂 session              # Gestione delle sessioni di gioco
-│   │── session.py          # Avvio della sessione e selezione di account e console
-│   │── 📂 frames           # Contiene i frame acquisiti dalle sessioni
-│   │── 📂 remote_play      # Moduli per la gestione delle sessioni Remote Play
-│       │── __init__.py      # Inizializza il modulo
-│       │── controller.py    # Controlla il gamepad della sessione
-│       │── session_manager.py  # Gestione avanzata della sessione Remote Play
-│       │── frame_handler.py  # Cattura e salvataggio ottimizzati dei frame
-│       │── network_monitor.py # Monitoraggio della connessione di rete
-│       │── utils.py         # Funzioni di utilità (es. pulizia cartelle)
+└── 📂 session           # Game session management
+    ├── session.py       # Session startup and account/console selection
+    ├── 📂 frames        # Contains captured session frames
+    └── 📂 remote_play   # Remote Play session management modules
+        ├── __init__.py   # Initializes the module
+        ├── controller.py # Controls session gamepad
+        ├── session_manager.py # Advanced Remote Play session management
+        ├── frame_handler.py # Optimized frame capture and saving
+        ├── network_monitor.py # Network connection monitoring
+        └── utils.py      # Utility functions (e.g., folder cleanup)
 ```
 
 ---
 
-## 📌 **Moduli del Progetto**
+## 📌 **Project Modules**
 ### 🔹 `session.py`
-- **Descrizione:** Script principale per avviare la sessione Remote Play.
-- **Cosa fa:**  
-  1. Mostra gli account registrati.  
-  2. Permette di selezionare la console.  
-  3. Verifica preliminarmente la connessione.
-  4. Avvia la sessione ottimizzata e inizia la cattura dei frame.  
-  5. Gestisce la chiusura sicura della sessione.  
+- **Description:** Main script to start the Remote Play session.
+- **What it does:**  
+  1. Displays registered accounts.  
+  2. Allows console selection.  
+  3. Performs a preliminary connection check.
+  4. Starts the optimized session and begins frame capture.  
+  5. Manages safe session closure.  
 
 ### 🔹 `remote_play/session_manager.py`
-- **Descrizione:** Gestisce la connessione alla sessione Remote Play con funzionalità avanzate.
-- **Cosa fa:**  
-  - Crea e gestisce la connessione con la console.  
-  - Implementa la riconnessione automatica.
-  - Monitora lo stato della connessione.
-  - Adatta dinamicamente la qualità.
-  - Gestisce il ciclo di vita completo della sessione.
+- **Description:** Manages the connection to the Remote Play session with advanced features.
+- **What it does:**  
+  - Creates and manages the connection with the console.  
+  - Implements automatic reconnection.
+  - Monitors connection status.
+  - Dynamically adapts quality.
+  - Manages the complete session lifecycle.
 
 ### 🔹 `remote_play/frame_handler.py`
-- **Descrizione:** Gestisce la cattura e il salvataggio ottimizzati dei frame.
-- **Cosa fa:**  
-  - Riceve i frame video dal QueueReceiver.
-  - Elabora i frame in modo asincrono per evitare blocchi.
-  - Adatta la velocità di acquisizione in base al carico.
-  - Ottimizza la qualità del salvataggio.
-  - Mantiene statistiche dettagliate.
+- **Description:** Manages optimized frame capture and saving.
+- **What it does:**  
+  - Receives video frames from the QueueReceiver.
+  - Processes frames asynchronously to avoid blocking.
+  - Adapts capture speed based on load.
+  - Optimizes saving quality.
+  - Maintains detailed statistics.
 
 ### 🔹 `remote_play/network_monitor.py`
-- **Descrizione:** Monitora in modo avanzato la connessione di rete.
-- **Cosa fa:**  
-  - Verifica la raggiungibilità della console.
-  - Calcola statistiche di ping e perdita di pacchetti.
-  - Fornisce informazioni sulla stabilità della connessione.
-  - Offre sia versioni sincrone che asincrone delle funzionalità.
+- **Description:** Advanced network connection monitoring.
+- **What it does:**  
+  - Checks console reachability.
+  - Calculates ping and packet loss statistics.
+  - Provides information on connection stability.
+  - Offers both synchronous and asynchronous versions of functionalities.
 
 ### 🔹 `remote_play/controller.py`
-- **Descrizione:** Controlla il gamepad della sessione.
-- **Cosa fa:**  
-  - Inizializza il controller.  
-  - Invia comandi alla console.  
+- **Description:** Controls the session gamepad.
+- **What it does:**  
+  - Initializes the controller.  
+  - Sends commands to the console.  
 
 ### 🔹 `remote_play/utils.py`
-- **Descrizione:** Funzioni di utilità.
-- **Cosa fa:**  
-  - Cancella i frame vecchi prima di una nuova sessione.  
-  - Gestisce la pulizia delle cartelle.  
+- **Description:** Utility functions.
+- **What it does:**  
+  - Deletes old frames before a new session.  
+  - Manages folder cleanup.  
 
 ---
 
-## 🛠 **Risoluzione dei Problemi**
-### 🔹 **Errore: Nessun frame video ricevuto**
-- **Soluzione:** Il sistema ora tenta automaticamente di passare da h264 a HEVC. Se il problema persiste, verificare che i codec siano installati correttamente.
+## 🛠 **Troubleshooting**
+### 🔹 **Error: No video frames received**
+- **Solution:** The system now automatically attempts to switch from h264 to HEVC. If the problem persists, ensure the codecs are correctly installed.
 
-### 🔹 **Errore di autenticazione PSN**
-- **Soluzione:** Cambiare l'indirizzo MAC della scheda di rete e riprovare.
+### 🔹 **PSN authentication error**
+- **Solution:** Change the network card's MAC address and try again.
 
-### 🔹 **Errore: "Sessione non attiva"**
-- **Soluzione:** Il sistema ora esegue una verifica preliminare della connessione. Se il problema persiste, controllare che la console sia accesa e connessa alla stessa rete.
+### 🔹 **Error: "Session not active"**
+- **Solution:** The system now performs a preliminary connection check. If the problem persists, ensure the console is turned on and connected to the same network.
 
-### 🔹 **Errore: "No Status" durante il collegamento della console**
-- **Soluzione:** Verificare che:
-  - La console sia accesa e non in modalità standby
-  - L'IP inserito sia corretto e raggiungibile (provare a fare un ping)
-  - Il Remote Play sia abilitato nelle impostazioni della console
-  - Non ci siano firewall che bloccano la comunicazione
+### 🔹 **Error: "No Status" during console linking**
+- **Solution:** Ensure that:
+  - The console is turned on and not in standby mode
+  - The entered IP is correct and reachable (try pinging it)
+  - Remote Play is enabled in the console settings
+  - No firewalls are blocking the communication
 
-### 🔹 **Disconnessioni frequenti**
-- **Soluzione:** Il nuovo sistema implementa la riconnessione automatica e l'adattamento della qualità. Se i problemi persistono:
-  1. Controllare la stabilità della connessione di rete
-  2. Ridurre manualmente la risoluzione a 540p nel file `session_manager.py`
-  3. Verificare che non ci siano altri dispositivi che saturano la rete
+### 🔹 **Frequent disconnections**
+- **Solution:** The new system implements automatic reconnection and quality adaptation. If problems persist:
+  1. Check network connection stability
+  2. Manually reduce resolution to 540p in the `session_manager.py` file
+  3. Ensure no other devices are saturating the network
 
-### 🔹 **Prestazioni scadenti o frame persi**
-- **Soluzione:** Il sistema ora monitora le prestazioni e adatta automaticamente la qualità. Se i problemi persistono:
-  1. Verificare le risorse disponibili sul PC
-  2. Chiudere applicazioni che consumano banda di rete
-  3. Collegare la console PlayStation via cavo Ethernet anziché Wi-Fi
+### 🔹 **Poor performance or lost frames**
+- **Solution:** The system now monitors performance and automatically adapts quality. If problems persist:
+  1. Check available resources on the PC
+  2. Close applications consuming network bandwidth
+  3. Connect the PlayStation console via Ethernet cable instead of Wi-Fi
 
 ---
 
-🚀 **Il software è ora ancora più stabile, resiliente e facile da usare!** 🎮🔥
+🚀 **The software is now even more stable, resilient and easy to use!** 🎮🔥
