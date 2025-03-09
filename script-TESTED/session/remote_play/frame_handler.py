@@ -1,3 +1,10 @@
+import sys
+from pathlib import Path
+# Adjust sys.path to include the project root directory (three levels up)
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 # This file contains the EnhancedFrameHandler class which:
 # - Captures video frames from the Remote Play session.
 # - Saves the frames as images, applying compression and quality adjustments.
@@ -20,7 +27,7 @@ from ai_model.fifa.data_collector import FIFADataCollector
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO, 
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+                    format='%(asctime)s - %(name)s - %(levellevel)s - %(message)s')
 logger = logging.getLogger("FrameHandler")
 
 # Costanti
@@ -275,7 +282,7 @@ class EnhancedFrameHandler:
         processing_tasks = set()
         last_stats_report = time.time()
         
-        while device.session && device.session.is_ready && self.is_running:
+        while device.session and device.session.is_ready and self.is_running:
             try:
                 receiver = device.session.receiver
                 
