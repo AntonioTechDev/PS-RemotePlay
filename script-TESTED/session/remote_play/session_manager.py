@@ -27,6 +27,12 @@ CONNECTION_TIMEOUT = 15.0    # Aumentato il timeout
 HEALTH_CHECK_INTERVAL = 3.0  # Intervallo di controllo della connessione
 MAX_CONNECTION_ISSUES = 3    # Numero massimo di problemi prima di riconnettere
 
+# This file defines EnhancedSessionManager which:
+# - Establishes and manages a Remote Play session.
+# - Implements connection retries, health checking, and quality control.
+# - Performs adaptive reconnection if connection issues are detected.
+# - Manages background tasks such as frame capture and adaptive quality.
+
 class EnhancedSessionManager:
     """Gestore sessione Remote Play ottimizzato per una connessione più stabile."""
     

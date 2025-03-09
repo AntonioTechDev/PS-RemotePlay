@@ -1,3 +1,7 @@
+# This file provides:
+# - initialize_controller(): To activate and start the session controller.
+# - send_test_commands(): To send a preset sequence of commands to the console.
+
 from pyremoteplay import RPDevice
 import asyncio
 

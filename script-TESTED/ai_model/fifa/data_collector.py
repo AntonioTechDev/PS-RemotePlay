@@ -1,3 +1,6 @@
+### Mutti Working
+
+
 import json
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +24,29 @@ class FIFADataCollector:
                 "game_phase": game_state.game_phase
             },
             "action": human_action  # button press or stick movement
+        })
+    
+    def record_rl_transition(self, game_state, human_action, reward, next_state):
+        self.current_session.append({
+            "timestamp": datetime.now().isoformat(),
+            "game_state": {
+                "ball_position": game_state.ball_position,
+                "player_position": game_state.player_position,
+                "opponent_positions": game_state.opponent_positions,
+                "score": game_state.score,
+                "possession": game_state.possession,
+                "game_phase": game_state.game_phase
+            },
+            "action": human_action,
+            "reward": reward,
+            "next_state": {
+                "ball_position": next_state.ball_position,
+                "player_position": next_state.player_position,
+                "opponent_positions": next_state.opponent_positions,
+                "score": next_state.score,
+                "possession": next_state.possession,
+                "game_phase": next_state.game_phase
+            }
         })
     
     def save_session(self):

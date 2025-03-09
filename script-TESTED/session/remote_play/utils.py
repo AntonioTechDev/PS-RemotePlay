@@ -1,3 +1,7 @@
+# This file exports a function to:
+# - Delete any existing frames saved from previous sessions.
+# - Create a fresh directory to store the new session's frames.
+
 import os
 import shutil
 

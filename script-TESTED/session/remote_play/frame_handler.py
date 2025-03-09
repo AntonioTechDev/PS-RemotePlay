@@ -1,3 +1,9 @@
+# This file contains the EnhancedFrameHandler class which:
+# - Captures video frames from the Remote Play session.
+# - Saves the frames as images, applying compression and quality adjustments.
+# - Monitors performance stats and adapts frame capture rate as needed.
+# - When enabled for training, integrates with AI modules to record game state and actions.
+
 import asyncio
 import os
 import cv2
@@ -269,7 +275,7 @@ class EnhancedFrameHandler:
         processing_tasks = set()
         last_stats_report = time.time()
         
-        while device.session and device.session.is_ready and self.is_running:
+        while device.session && device.session.is_ready && self.is_running:
             try:
                 receiver = device.session.receiver
                 
@@ -357,5 +363,6 @@ class EnhancedFrameHandler:
 # che ora utilizza internamente l'EnhancedFrameHandler
 async def save_video_frames(device, user_name):
     """Funzione di compatibilità che usa la nuova implementazione."""
-    handler = EnhancedFrameHandler()
+    # handler = EnhancedFrameHandler()
+    handler = EnhancedFrameHandler(collect_training=False)
     await handler.save_video_frames(device, user_name)
