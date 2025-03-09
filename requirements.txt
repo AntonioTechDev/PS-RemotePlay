@@ -30,6 +30,7 @@ pycparser==2.22
 pycryptodomex==3.21.0
 pyee==8.1.0
 pyps4-2ndscreen==1.2.1
+pyremoteplay==0.7.6
 PyYAML==6.0
 requests==2.25.1
 scikit-learn==1.6.1
