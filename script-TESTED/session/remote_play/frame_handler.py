@@ -14,8 +14,13 @@ async def save_video_frames(device, user_name):
 
     print(f"📡 Inizio cattura frame per {user_name}... Loop attivo fino alla disconnessione.")
     
-    while device.session and device.session.is_ready:
+    while True:
         try:
+            # Verifica se la sessione è ancora attiva
+            if not device.session or not device.session.is_ready:
+                print("🛑 Sessione non più attiva o pronta. Uscita dal loop di cattura.")
+                break
+                
             print("🧹 Pulizia della directory dei frame...")
             clean_frame_directory(user_name)
             print("🧹 Pulizia riuscita")
@@ -23,27 +28,46 @@ async def save_video_frames(device, user_name):
             print("ATTENDO 1S")
             await asyncio.sleep(1)
             
+            # Controllo che il device e la sessione siano ancora validi
+            if not device or not device.session:
+                print("❌ Errore: Device o sessione non disponibile. Uscita dal loop.")
+                break
+                
             receiver = device.session.receiver
 
             await asyncio.sleep(1)
             print("ATTENDO 1S")
             
-            if not receiver or not hasattr(receiver, "video_frames"):
-                print("❌ Errore: Receiver non disponibile o non ha `video_frames`. Attendo...")
+            # Verifica che il receiver sia valido
+            if not receiver:
+                print("❌ Errore: Receiver non disponibile. Attendo...")
+                await asyncio.sleep(0.5)
+                continue
+                
+            if not hasattr(receiver, "video_frames"):
+                print("❌ Errore: Receiver non ha l'attributo `video_frames`. Attendo...")
                 await asyncio.sleep(0.5)
                 continue  
 
+            # Verifica se video_frames è None e gestisci il caso
             if receiver.video_frames is None:
-                print("⚠️ Warning: receiver.video_frames è None. Disconnettendo...")
-                break  # Esce dal loop se il receiver non è più disponibile
-
-            if receiver.video_frames is None:
-                print("⚠️ Warning: receiver.video_frames è None. Reinizzializzo la lista...")
-                receiver.video_frames = []  # Imposta una lista vuota per evitare errori
+                print("⚠️ Warning: receiver.video_frames è None. Attendo...")
                 await asyncio.sleep(0.5)
                 continue
 
-            frame = receiver.video_frames[-1]
+            # Verifica se ci sono frame disponibili
+            if not receiver.video_frames:  # Lista vuota
+                print("⚠️ Warning: Nessun frame disponibile. Attendo...")
+                await asyncio.sleep(0.5)
+                continue
+                
+            # Accedi all'ultimo frame in modo sicuro
+            try:
+                frame = receiver.video_frames[-1]
+            except (IndexError, TypeError, AttributeError) as e:
+                print(f"⚠️ Errore nell'accesso ai frame: {e}. Attendo...")
+                await asyncio.sleep(0.5)
+                continue
 
             # Verifica che il frame sia valido
             if frame is None or frame.width == 0 or frame.height == 0 or frame.format is None:
@@ -68,9 +92,20 @@ async def save_video_frames(device, user_name):
 
         except AssertionError:
             print("⚠️ Errore asyncio: tentativo di scrivere su un trasporto chiuso. Ignoro il frame e continuo...")
+            await asyncio.sleep(0.5)
             continue
+        except (AttributeError, TypeError) as e:
+            print(f"⚠️ Errore di attributo/tipo: {e}. La sessione potrebbe essere instabile.")
+            await asyncio.sleep(1)  # Attesa più lunga per dare tempo alla sessione di stabilizzarsi
+            
+            # Verifica se la sessione è ancora attiva
+            if not device.session or not device.session.is_ready:
+                print("🛑 Sessione non più disponibile dopo errore. Uscita dal loop.")
+                break
+                
         except Exception as e:
             print(f"❌ Errore imprevisto durante la cattura frame: {e}")
+            await asyncio.sleep(0.5)
 
         await asyncio.sleep(0.5)
 
