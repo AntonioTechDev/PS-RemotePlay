@@ -63,7 +63,7 @@ async def connect_and_run_session(user_profile, selected_mac, ip_address):
             user=user_profile.name,
             profiles=profiles,
             receiver=receiver,
-            resolution="720p",
+            resolution="360p",
             fps=30,
             quality="default",
             codec="h264",
@@ -83,10 +83,10 @@ async def connect_and_run_session(user_profile, selected_mac, ip_address):
                 user=user_profile.name,
                 profiles=profiles,
                 receiver=receiver,
-                resolution="720p",
+                resolution="360p",
                 fps=30,
                 quality="default",
-                codec="hevc",
+                codec="HEVC",
                 hdr=False
             )
             success = await device.connect()

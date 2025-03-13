@@ -3,6 +3,7 @@ import os
 import cv2
 import numpy as np
 from datetime import datetime
+from remote_play.utils import clean_frame_directory
 
 FRAME_DIR = "frames"
 
@@ -12,11 +13,21 @@ async def save_video_frames(device, user_name):
     os.makedirs(frame_path, exist_ok=True)
 
     print(f"📡 Inizio cattura frame per {user_name}... Loop attivo fino alla disconnessione.")
-
+    
     while device.session and device.session.is_ready:
         try:
+            print("🧹 Pulizia della directory dei frame...")
+            clean_frame_directory(user_name)
+            print("🧹 Pulizia riuscita")
+            
+            print("ATTENDO 1S")
+            await asyncio.sleep(1)
+            
             receiver = device.session.receiver
 
+            await asyncio.sleep(1)
+            print("ATTENDO 1S")
+            
             if not receiver or not hasattr(receiver, "video_frames"):
                 print("❌ Errore: Receiver non disponibile o non ha `video_frames`. Attendo...")
                 await asyncio.sleep(0.5)
@@ -26,8 +37,9 @@ async def save_video_frames(device, user_name):
                 print("⚠️ Warning: receiver.video_frames è None. Disconnettendo...")
                 break  # Esce dal loop se il receiver non è più disponibile
 
-            if not receiver.video_frames:
-                print("⚠️ Nessun frame disponibile, in attesa...")
+            if receiver.video_frames is None:
+                print("⚠️ Warning: receiver.video_frames è None. Reinizzializzo la lista...")
+                receiver.video_frames = []  # Imposta una lista vuota per evitare errori
                 await asyncio.sleep(0.5)
                 continue
 
@@ -40,7 +52,7 @@ async def save_video_frames(device, user_name):
                 continue
 
             print(f"🔍 Frame ricevuto - Tipo: {type(frame)}, Dimensioni: {frame.width}x{frame.height}, Formato: {frame.format}")
-
+            
             try:
                 img = frame.to_ndarray(format='rgb24')
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
