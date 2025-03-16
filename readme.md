@@ -1,44 +1,44 @@
-# 🎮 PS Remote Play - Guida Completa
+# 🎮 PS Remote Play - Complete Guide
 
-Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per collegare e gestire account PSN con Remote Play utilizzando la libreria `pyremoteplay`.
-
----
-
-## 📜 **Indice**
-1. [Prerequisiti](#prerequisiti)
-2. [Registrazione di un account PSN](#registrazione-di-un-account-psn)
-3. [Collegamento di un account a una console](#collegamento-di-un-account-a-una-console)
-4. [Avvio e gestione di una sessione Remote Play](#avvio-e-gestione-di-una-sessione-remote-play)
-5. [Struttura del codice](#struttura-del-codice)
-6. [Risoluzione dei problemi](#risoluzione-dei-problemi)
+This guide provides detailed instructions for using the scripts to connect and manage PSN accounts with Remote Play using the `pyremoteplay` library.
 
 ---
 
-## 📌 **Prerequisiti**
-- Installare Python 3.10.11.
-- Installare le dipendenze richieste eseguendo:
+## 📜 **Table of Contents**
+1. [Prerequisites](#prerequisites)
+2. [Registering a PSN Account](#registering-a-psn-account)
+3. [Linking an Account to a Console](#linking-an-account-to-a-console)
+4. [Starting and Managing a Remote Play Session](#starting-and-managing-a-remote-play-session)
+5. [Code Structure](#code-structure)
+6. [Troubleshooting](#troubleshooting)
+
+---
+
+## 📌 **Prerequisites**
+- Install Python 3.10.11.
+- Install the required dependencies by running:
   ```sh
   pip install -r requirements.txt
   ```
-- Disporre di un account PSN valido e di una console PlayStation compatibile con Remote Play.
-- Assicurarsi che la console sia accesa e connessa alla stessa rete del PC.
+- Have a valid PSN account and a PlayStation console compatible with Remote Play.
+- Ensure the console is turned on and connected to the same network as the PC.
 
 ---
 
-## 🎮 **Registrazione di un account PSN**
-📌 **Script da eseguire:** `link_account.py`
+## 🎮 **Registering a PSN Account**
+📌 **Script to run:** `link_account.py`
 
-> **Nota Importante**: Questo script inizializza solamente l'account nel file `.pyremoteplay/.profile.json` creando una struttura base. Il collegamento alla console avverrà tramite lo script successivo.
+> **Important Note**: This script only initializes the account in the file `.pyremoteplay/.profile.json` by creating a basic structure. The actual linking to the console will occur in the next script.
 
-1. Eseguire il comando:
+1. Run the command:
    ```sh
    python -m account_management.link_account
    ```
-2. Seguire le istruzioni per accedere con il proprio account PSN.
-3. Copiare l'URL di redirect generato e incollarlo nella console quando richiesto.
-4. Se tutto è corretto, il profilo verrà inizializzato nel file `.pyremoteplay/.profile.json` con una struttura simile a:
+2. Follow the instructions to log in with your PSN account.
+3. Copy the generated redirect URL and paste it into the console when prompted.
+4. If everything is correct, the profile will be initialized in the file `.pyremoteplay/.profile.json` with a structure similar to:
    ```json
-   "nome_utente": {
+   "username": {
        "id": "base64_encoded_id",
        "hosts": {}
    }
@@ -46,22 +46,22 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 ---
 
-## 🎮 **Collegamento di un account a una console**
-📌 **Script da eseguire:** `connecting_account_to_console.py`
+## 🎮 **Linking an Account to a Console**
+📌 **Script to run:** `connecting_account_to_console.py`
 
-> **Nota Importante**: Questo script completa il processo di registrazione collegando effettivamente l'account PSN alla console e popolando i dati nella sezione "hosts" del file `.profile.json`.
+> **Important Note**: This script completes the registration process by actually linking the PSN account to the console and populating the data in the "hosts" section of the `.profile.json` file.
 
-1. Assicurarsi che la console sia accesa e che il Remote Play sia abilitato nelle impostazioni.
-2. Eseguire il comando:
+1. Ensure the console is on and that Remote Play is enabled in the settings.
+2. Run the command:
    ```sh
    python -m account_management.connecting_account_to_console
    ```
-3. Selezionare l'account PSN registrato nel passaggio precedente.
-4. Inserire l'indirizzo IP della console (visibile nelle impostazioni di rete della PlayStation).
-5. Inserire il codice PIN mostrato nelle impostazioni di **Riproduzione Remota** della console.
-6. Se tutto è corretto, la console verrà registrata nel file `.pyremoteplay/.profile.json` associata all'account, e la sezione "hosts" verrà popolata con tutti i dati necessari:
+3. Select the registered PSN account from the previous step.
+4. Enter the IP address of the console (visible in the console's network settings).
+5. Enter the PIN code shown in the console's **Remote Play** settings.
+6. If everything goes well, the console will be registered in the `.pyremoteplay/.profile.json` file associated with the account, and the "hosts" section will be populated with all necessary data:
    ```json
-   "nome_utente": {
+   "username": {
        "id": "base64_encoded_id",
        "hosts": {
            "MAC_ADDRESS": {
@@ -81,102 +81,127 @@ Questa guida fornisce istruzioni dettagliate per l'utilizzo degli script per col
 
 ---
 
-## 🎮 **Avvio e gestione di una sessione Remote Play**
-📌 **Script da eseguire:** `session.py`
+## 🎮 **Starting and Managing a Remote Play Session**
+📌 **Script to run:** `session.py`
 
-1. Eseguire il comando:
+1. Run the command:
    ```sh
    python -m session.session
    ```
-2. Selezionare l'account PSN che si desidera utilizzare per la sessione.
-3. Selezionare la console a cui connettersi.
-4. Se richiesto, inserire l'IP della console.
-5. Attendere che la sessione venga avviata correttamente.
-6. La sessione catturerà i frame video e li salverà automaticamente.
-7. Per terminare la sessione, premere **CTRL+C** o chiudere la finestra del terminale.
+2. Select the PSN account you wish to use for the session.
+3. Select the console to connect to.
+4. If prompted, enter the console’s IP address.
+5. Wait for the session to start successfully.
+6. The session will automatically capture and save video frames.
+7. To end the session, press **CTRL+C** or close the terminal window.
 
 ---
 
-## 📂 **Struttura del Codice**
-Il progetto è suddiviso in più moduli per migliorare la manutenibilità.
+## 📂 **Code Structure**
+The project is divided into multiple modules to enhance maintainability.
 
 ```
 📂 PS-SOFTWARE/script-TESTED
-│── requirements.txt       # Dipendenze richieste
-│── readme.md              # Documentazione del progetto
-│── 📂 account_management   # Gestione degli account PSN
-│   │── __init__.py        # Inizializza il modulo
-│   │── connecting_account_to_console.py  # Collega un account PSN a una console
-│   │── link_account.py     # Registra un account PSN nel sistema
-│   │── utils.py            # Funzioni di utilità per la gestione degli account
+│── requirements.txt       # Required dependencies
+│── readme.md              # Project documentation
+│── 📂 account_management   # PSN account management
+│   │── __init__.py        # Module initialization
+│   │── connecting_account_to_console.py  # Link a PSN account to a console
+│   │── link_account.py     # Register a PSN account in the system
+│   │── utils.py            # Utility functions for account management
 │
-│── 📂 session              # Gestione delle sessioni di gioco
-│   │── session.py          # Avvio della sessione e selezione di account e console
-│   │── 📂 Frames           # Contiene i frame acquisiti dalle sessioni
-│   │── 📂 remote_play      # Moduli per la gestione delle sessioni Remote Play
-│       │── __init__.py      # Inizializza il modulo
-│       │── controller.py    # Controlla il gamepad della sessione
-│       │── session_manager.py  # Connessione e gestione della sessione Remote Play
-│       │── frame_handler.py  # Cattura e salvataggio dei frame
-│       │── utils.py         # Funzioni di utilità (es. pulizia cartelle)
+│── 📂 session              # Game session management
+│   │── session.py          # Start session and select account and console
+│   │── 📂 Frames           # Contains frames captured from sessions
+│   │── 📂 remote_play      # Modules for Remote Play session management
+│       │── __init__.py      # Module initialization
+│       │── controller.py    # Handles the session gamepad
+│       │── session_manager.py  # Connection and management of the Remote Play session
+│       │── frame_handler.py  # Captures and saves video frames
+│       │── utils.py         # Utility functions (e.g., cleaning folders)
 ```
 
 ---
 
-## 📌 **Moduli del Progetto**
+## 📌 **Project Modules**
 ### 🔹 `session.py`
-- **Descrizione:** Script principale per avviare la sessione Remote Play.
-- **Cosa fa:**  
-  1. Mostra gli account registrati.  
-  2. Permette di selezionare la console.  
-  3. Avvia la sessione e inizia la cattura dei frame.  
-  4. Gestisce la chiusura della sessione.  
+- **Description:** Main script for starting the Remote Play session.
+- **Functions:**  
+  1. Displays registered accounts.  
+  2. Allows selecting the console.  
+  3. Initiates the session and begins capturing frames.  
+  4. Manages session termination.  
 
 ### 🔹 `remote_play/session_manager.py`
-- **Descrizione:** Gestisce la connessione alla sessione Remote Play.
-- **Cosa fa:**  
-  - Crea una connessione con la console.  
-  - Configura il ricevitore video.  
-  - Gestisce la chiusura sicura della sessione.  
+- **Description:** Manages the connection to the Remote Play session.
+- **Functions:**  
+  - Establishes a connection to the console.  
+  - Configures the video receiver.  
+  - Handles safe termination of the session.  
 
 ### 🔹 `remote_play/controller.py`
-- **Descrizione:** Controlla il gamepad della sessione.
-- **Cosa fa:**  
-  - Inizializza il controller.  
-  - Invia comandi test alla console.  
+- **Description:** Controls the session gamepad.
+- **Functions:**  
+  - Initializes the controller.  
+  - Sends test commands to the console.  
 
 ### 🔹 `remote_play/frame_handler.py`
-- **Descrizione:** Gestisce la cattura e il salvataggio dei frame.
-- **Cosa fa:**  
-  - Riceve i frame video.  
-  - Li converte in immagini.  
-  - Li salva nella cartella `Frames/{user_name}`.  
+- **Description:** Manages video frame capture and saving.
+- **Functions:**  
+  - Receives video frames.  
+  - Converts frames to images.  
+  - Saves them in the directory `Frames/{username}`.  
 
 ### 🔹 `remote_play/utils.py`
-- **Descrizione:** Funzioni di utilità.
-- **Cosa fa:**  
-  - Cancella i frame vecchi prima di una nuova sessione.  
-  - Gestisce la pulizia delle cartelle.  
+- **Description:** Utility functions.
+- **Functions:**  
+  - Cleans up old frames before a new session.  
+  - Manages folder cleaning routines.
 
 ---
 
-## 🛠 **Risoluzione dei Problemi**
-### 🔹 **Errore: Nessun frame video ricevuto**
-- **Soluzione:** Assicurarsi che il codec `h264` sia supportato. Se non lo è, il sistema proverà a usare `HEVC`.
+## 🛠 **Troubleshooting**
+### 🔹 **Error: No video frames received**
+- **Solution:** Ensure that the codec `h264` is supported. If it isn’t, the system will attempt to use `HEVC`.
 
-### 🔹 **Errore di autenticazione PSN**
-- **Soluzione:** Cambiare l'indirizzo MAC della scheda di rete e riprovare.
+### 🔹 **Error: PSN Authentication error**
+- **Solution:** Change the network card’s MAC address and try again.
 
-### 🔹 **Errore: "Sessione non attiva"**
-- **Soluzione:** Controllare che la console sia accesa e connessa alla stessa rete.
+### 🔹 **Error: "Session not active"**
+- **Solution:** Verify that the console is on and connected to the network.
 
-### 🔹 **Errore: "No Status" durante il collegamento della console**
-- **Soluzione:** Verificare che:
-  - La console sia accesa e non in modalità standby
-  - L'IP inserito sia corretto e raggiungibile (provare a fare un ping)
-  - Il Remote Play sia abilitato nelle impostazioni della console
-  - Non ci siano firewall che bloccano la comunicazione
+### 🔹 **Error: "No Status" when linking the console**
+- **Solution:** Make sure:
+  - The console is turned on and not in standby.
+  - The entered IP is correct and reachable (try pinging it).
+  - Remote Play is enabled in the console settings.
+  - No firewall is blocking communication.
 
 ---
 
-🚀 **Ora il codice è ben strutturato, documentato e pronto all'uso!** 🎮🔥
+## Data Collection and Model Training Flow
+
+1. **Data Collection:**
+   - During a Remote Play session, `frame_handler.py` captures video frames from the console.
+   - Each frame is processed by `FIFAStateDetector` to extract the current game state (e.g. ball position, player and opponent positions, score, possession, and game phase).
+   - Simultaneously, the controller's actions (such as stick movements) are recorded.
+   - Both the game state and controller action are saved as records by `FIFADataCollector` into JSON files inside the `training_data/fifa` directory.
+
+2. **Supervised Model Training:**
+   - The script `train_ai_model.py` loads the collected JSON data.
+   - It pre-processes each record into a numeric feature vector (representing the game state) and an associated target value (the recorded action).
+   - A simple feedforward neural network defined in `SimpleFIFAModel` is trained on this data using backpropagation and Mean Squared Error as the loss function.
+   - Data is split into training, validation, and test sets to monitor performance during training.
+
+3. **Reinforcement Learning:**
+   - The file `reinforcement/training_agent.py` defines an RL agent with a policy network (`RLAgent`).
+   - As the game is played, transitions (state, action, reward, next state) are stored in a replay buffer (`ReplayBuffer`).
+   - The RL agent uses an epsilon-greedy policy for action selection and is periodically updated by sampling mini-batches from the replay buffer.
+   - This training loop continuously refines the agent’s policy to maximize the expected reward based on game feedback.
+
+4. **Overall Flow:**
+   - Remote Play sessions continuously record gameplay data (frames, game states, and control inputs).
+   - The collected data is used for both supervised learning and reinforcement learning approaches.
+   - Combined, these methods allow you to train models that can predict optimal actions from game state features and improve over time based on gameplay rewards.
+
+🚀 **Now the code is well-structured, documented, and ready for use!** 🎮🔥

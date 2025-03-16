@@ -2,6 +2,11 @@ import asyncio
 from pyremoteplay import RPDevice
 from pyremoteplay.profile import Profiles
 from pyremoteplay.receiver import QueueReceiver
+import sys
+import os
+# Add the parent directory of 'remote_play' to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+
 from remote_play.utils import clean_frame_directory
 from remote_play.controller import initialize_controller, send_test_commands
 from remote_play.frame_handler import save_video_frames

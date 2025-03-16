@@ -1,0 +1,6 @@
+[console_scripts]
+pyremoteplay = pyremoteplay.__main__:main
+
+[gui_scripts]
+pyremoteplay-gui = pyremoteplay.gui.__main__:main [gui]
+

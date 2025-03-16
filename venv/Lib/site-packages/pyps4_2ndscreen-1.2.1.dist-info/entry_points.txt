@@ -1,0 +1,3 @@
+[console_scripts]
+pyps4-2ndscreen = pyps4_2ndscreen.__main__:cli
+
