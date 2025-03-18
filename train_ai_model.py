@@ -60,6 +60,18 @@ def preprocess_data(record):
         target = 0.0
     return np.array(features, dtype=np.float32), np.array([target], dtype=np.float32)
 
+def create_sequences(data, seq_len=5):
+    sequences = []
+    targets = []
+    for i in range(len(data) - seq_len + 1):
+        seq = []
+        for j in range(seq_len):
+            features, target = preprocess_data(data[i+j])
+            seq.append(features)
+        sequences.append(np.stack(seq, axis=0))
+        targets.append(target)
+    return np.array(sequences, dtype=np.float32), np.array(targets, dtype=np.float32)
+
 class FIFADataDataset(Dataset):
     def __init__(self, records):
         self.samples = [preprocess_data(r) for r in records]
@@ -90,23 +102,32 @@ def train():
     # Load and preprocess the data
     data_records = load_data(DATA_DIR)
     random.shuffle(data_records)
-    # Determine the input dimension from the first record
-    features, _ = preprocess_data(data_records[0])
-    input_dim = features.shape[0]
+    sequences, targets = create_sequences(data_records, seq_len=5)
+    seq_len, feature_dim = sequences.shape[1:3]
 
-    # Split the data: 60% train, 20% validation, 20% test
-    train_records, test_records = train_test_split(data_records, test_size=0.2, random_state=42)
-    train_records, val_records = train_test_split(train_records, test_size=0.25, random_state=42)  # 0.25 of 80% = 20%
-    train_dataset = FIFADataDataset(train_records)
-    val_dataset = FIFADataDataset(val_records)
-    test_dataset = FIFADataDataset(test_records)
+    X_train, X_temp, y_train, y_temp = train_test_split(sequences, targets, test_size=0.4, random_state=42)
+    X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+    class FIFASequenceDataset(Dataset):
+        def __init__(self, X, y):
+            self.X = X
+            self.y = y
+        def __len__(self):
+            return len(self.X)
+        def __getitem__(self, idx):
+            return self.X[idx], self.y[idx]
+
+    train_dataset = FIFASequenceDataset(X_train, y_train)
+    val_dataset = FIFASequenceDataset(X_val, y_val)
+    test_dataset = FIFASequenceDataset(X_test, y_test)
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE)
 
-    # Initialize model, loss function, and optimizer
-    model = SimpleFIFAModel(input_dim)
+    # Instantiate dual LSTM model from the new module
+    from ai_model.fifa.dual_lstm_model import DualLSTMModel
+    model = DualLSTMModel(input_dim=feature_dim, movement_output_dim=4, action_output_dim=4)
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
@@ -115,12 +136,19 @@ def train():
         model.train()
         train_loss = 0.0
         for features_batch, targets_batch in train_loader:
+            # For demonstration, convert features to dummy images: (batch, seq_len, 3, 32, 32)
+            batch_size = features_batch.shape[0]
+            features_batch = torch.tensor(features_batch)
+            features_batch = features_batch.unsqueeze(2).unsqueeze(3).unsqueeze(4)
+            features_batch = features_batch.repeat(1,1,3,32,32)
             optimizer.zero_grad()
-            outputs = model(features_batch)
-            loss = criterion(outputs, targets_batch)
+            move_pred, act_pred = model(features_batch)
+            target_move = torch.tensor(targets_batch).repeat(1,4)
+            target_act = torch.tensor(targets_batch).repeat(1,4)
+            loss = (criterion(move_pred, target_move) + criterion(act_pred, target_act)) / 2
             loss.backward()
             optimizer.step()
-            train_loss += loss.item() * features_batch.size(0)
+            train_loss += loss.item() * batch_size
         train_loss /= len(train_loader.dataset)
 
         # Validation
@@ -128,9 +156,15 @@ def train():
         val_loss = 0.0
         with torch.no_grad():
             for features_batch, targets_batch in val_loader:
-                outputs = model(features_batch)
-                loss = criterion(outputs, targets_batch)
-                val_loss += loss.item() * features_batch.size(0)
+                batch_size = features_batch.shape[0]
+                features_batch = torch.tensor(features_batch)
+                features_batch = features_batch.unsqueeze(2).unsqueeze(3).unsqueeze(4)
+                features_batch = features_batch.repeat(1,1,3,32,32)
+                move_pred, act_pred = model(features_batch)
+                target_move = torch.tensor(targets_batch).repeat(1,4)
+                target_act = torch.tensor(targets_batch).repeat(1,4)
+                loss = (criterion(move_pred, target_move) + criterion(act_pred, target_act)) / 2
+                val_loss += loss.item() * batch_size
         val_loss /= len(val_loader.dataset)
         print(f"Epoch {epoch+1}/{EPOCHS} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
 
@@ -139,9 +173,15 @@ def train():
     test_loss = 0.0
     with torch.no_grad():
         for features_batch, targets_batch in test_loader:
-            outputs = model(features_batch)
-            loss = criterion(outputs, targets_batch)
-            test_loss += loss.item() * features_batch.size(0)
+            batch_size = features_batch.shape[0]
+            features_batch = torch.tensor(features_batch)
+            features_batch = features_batch.unsqueeze(2).unsqueeze(3).unsqueeze(4)
+            features_batch = features_batch.repeat(1,1,3,32,32)
+            move_pred, act_pred = model(features_batch)
+            target_move = torch.tensor(targets_batch).repeat(1,4)
+            target_act = torch.tensor(targets_batch).repeat(1,4)
+            loss = (criterion(move_pred, target_move) + criterion(act_pred, target_act)) / 2
+            test_loss += loss.item() * batch_size
     test_loss /= len(test_loader.dataset)
     print(f"Test Loss: {test_loss:.4f}")
 
